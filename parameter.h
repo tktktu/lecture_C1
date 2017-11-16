@@ -47,5 +47,5 @@ typedef struct CYK_RESULT{
 #include<string.h>
 #include"C1_util.h"
 #include"cyk_C1.h"
-
+#include"sub_cyk_C1.h"
 #endif

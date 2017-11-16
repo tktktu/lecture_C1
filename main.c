@@ -8,12 +8,9 @@ for (int chara_cnt = 0; *((target_sentence) + chara_cnt) != '\0'; chara_cnt++){\
 }
 
 int main(void) {
-    char grammar_file[MAX_WORD] = "grammar3.csv";
-//    char grammar_file[MAX_WORD] = "grammar2.csv";
-    char dictionary_file[MAX_WORD] = "dictionary2.csv";
-//    char dictionary_file[MAX_WORD] = "dictionary1.csv";
-    char sentence[MAX_SENTENCE] = "I saw a girl with a telescope.";
-//    char sentence[MAX_SENTENCE] = "the child runs quickly to the large house.";
+    char grammar_file[MAX_WORD] = "";
+    char dictionary_file[MAX_WORD] = "";
+    char sentence[MAX_SENTENCE] = "";
     /*-----------------------------Define dictionary and grammar size----------------------*/
     DSArray dict = {DICTIONARY_SIZE, NULL};
     DSArray gram = {GRAMMAR_SIZE, NULL};
@@ -21,6 +18,37 @@ int main(void) {
     dict.data = (DS *) malloc(sizeof(DS) * dict.size);
     gram.data = (DS *) malloc(sizeof(DS) * gram.size);
     /*-----------------------------end----------------------------------------*/
+    /*---------------------Read a dictionary---------------------------*/
+    puts("DictionaryFile");
+    printf(">>>");
+    fgets(dictionary_file, MAX_WORD, stdin);
+    //Delete '\n'
+    dictionary_file[strlen(dictionary_file) - 1] = '\0';
+    if (readCsv(dictionary_file, dict.data) == -1) {
+        printf("Error NotFoundFile : %s\n", dictionary_file);
+        return 0;
+    }
+    /*------------------------------end--------------------------------*/
+    /*----------------------Read a grammar----------------------------*/
+    puts("GrammarFile");
+    printf(">>>");
+    fgets(grammar_file, MAX_WORD, stdin);
+    //Delete '\n'
+    grammar_file[strlen(grammar_file) - 1] = '\0';
+    if (readCsv(grammar_file, gram.data) == -1) {
+        printf("Error NotFoundFile : %s\n", grammar_file);
+        return 0;
+    }
+    /*---------------------------end---------------------------------*/
+    /*--------------------Read a target sentence----------------------*/
+    puts("InputSentence");
+    printf(">>>");
+    fgets(sentence, MAX_SENTENCE, stdin);
+    if (strlen(sentence) >= MAX_SENTENCE) {
+        puts("Error:LongSentence");
+        return 0;
+    }
+    /*------------------------------end-------------------------------*/
     /*-----------------------Initilize Cells---------------------------*/
     int word = 1;
     count_spaces(word, sentence);
@@ -33,37 +61,6 @@ int main(void) {
         cell_table_construct(&result.tables[i], init_cell);
     }
     /*----------------------------end----------------------------------*/
-    /*---------------------Read a dictionary---------------------------*/
-//    puts("DictionaryFile");
-//    printf(">>>");
-//    fgets(dictionary_file, MAX_WORD, stdin);
-//    //Delete '\n'
-//    dictionary_file[strlen(dictionary_file) - 1] = '\0';
-    if (readCsv(dictionary_file, dict.data) == -1) {
-        printf("Error NotFoundFile : %s\n", dictionary_file);
-        return 0;
-    }
-    /*------------------------------end--------------------------------*/
-    /*----------------------Read a grammar----------------------------*/
-//    puts("GrammarFile");
-//    printf(">>>");
-//    fgets(grammar_file, MAX_WORD, stdin);
-//    //Delete '\n'
-//    grammar_file[strlen(grammar_file) - 1] = '\0';
-    if (readCsv(grammar_file, gram.data) == -1) {
-        printf("Error NotFoundFile : %s\n", grammar_file);
-        return 0;
-    }
-    /*---------------------------end---------------------------------*/
-    /*--------------------Read a target sentence----------------------*/
-//    puts("InputSentence");
-//    printf(">>>");
-//    fgets(sentence, MAX_SENTENCE, stdin);
-    if (strlen(sentence) >= MAX_SENTENCE) {
-        puts("Error:LongSentence");
-        return 0;
-    }
-    /*------------------------------end-------------------------------*/
     /*-----------------------Analyze---------------------------*/
     if(analyze_cyk(result, sentence, dict, gram) != 0){
         printf("NotSentence:%s\n", sentence);
